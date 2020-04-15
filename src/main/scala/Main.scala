@@ -9,6 +9,7 @@ object Main extends App {
       directory: String = null,
       pattern: Pattern = null,
       rename: String = null,
+      contains: String = null,
       exclude: List[String] = Nil
   )
 
@@ -25,6 +26,9 @@ object Main extends App {
       //          else
       //            failure(s"unreadable: $x"))
       .text("pattern to search for")
+    opt[String]('c', "contains")
+      .action((x, c) => c.copy(contains = x))
+      .text("exclusion pattern")
     opt[String]('d', "dir")
       .action((x, c) => c.copy(directory = x))
       .withFallback(() => ".")
@@ -46,7 +50,7 @@ object Main extends App {
 
   optionsParser.parse(args, Options()) match {
     case Some(options) =>
-      Rename(options.pattern, options.directory, options.rename, options.test)
+      Rename(options.pattern, options.directory, options.rename, options.test, options.contains)
     case None => sys.exit(1)
   }
 
